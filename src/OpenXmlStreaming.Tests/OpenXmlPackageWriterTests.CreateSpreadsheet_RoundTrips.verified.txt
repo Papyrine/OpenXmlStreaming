@@ -4,7 +4,9 @@
       Name: Sheet1,
       Columns: [
         {
-          Name: 42
+          Name: 42,
+          ContainsRichText: false,
+          RequiredHighlight: false
         }
       ]
     }

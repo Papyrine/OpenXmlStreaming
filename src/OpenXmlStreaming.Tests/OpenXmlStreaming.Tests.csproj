@@ -13,4 +13,7 @@
     <PackageReference Include="Verify.OpenXml" />
     <ProjectReference Include="..\OpenXmlStreaming\OpenXmlStreaming.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Update="Verify.OpenXml" Version="1.13.0" />
+  </ItemGroup>
 </Project>

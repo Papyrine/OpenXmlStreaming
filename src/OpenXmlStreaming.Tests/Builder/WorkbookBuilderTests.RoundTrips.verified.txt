@@ -4,10 +4,14 @@
       Name: Revenue,
       Columns: [
         {
-          Name: Q1
+          Name: Q1,
+          ContainsRichText: false,
+          RequiredHighlight: false
         },
         {
-          Name: 1000
+          Name: 1000,
+          ContainsRichText: false,
+          RequiredHighlight: false
         }
       ]
     },
@@ -15,10 +19,14 @@
       Name: Expenses,
       Columns: [
         {
-          Name: Rent
+          Name: Rent,
+          ContainsRichText: false,
+          RequiredHighlight: false
         },
         {
-          Name: 500
+          Name: 500,
+          ContainsRichText: false,
+          RequiredHighlight: false
         }
       ]
     }
