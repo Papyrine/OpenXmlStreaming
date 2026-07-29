@@ -4,6 +4,7 @@
 *.bmp binary
 *.tif binary
 *.xlsx binary
+*.pptx binary
 *.docx binary
 *.zip binary
 *.ttf binary
