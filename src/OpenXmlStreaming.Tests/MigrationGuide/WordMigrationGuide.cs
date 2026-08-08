@@ -15,8 +15,9 @@ public class WordMigrationGuide
             // Add a styles part through the DOM. The SDK wires the relationship
             // from the main part to the styles part automatically.
             var stylesPart = mainPart.AddNewPart<StyleDefinitionsPart>();
-            stylesPart.Styles = new(
-                new Style(
+            stylesPart.Styles =
+            [
+                with(new Style(
                     new StyleName
                     {
                         Val = "Heading 1"
@@ -38,23 +39,25 @@ public class WordMigrationGuide
                 {
                     Type = StyleValues.Paragraph,
                     StyleId = "Heading1"
-                });
+                })
+            ];
 
             // Assign the main document body. Paragraphs reference the style by id.
             mainPart.Document =
-                new(
-                    new Body(
-                        new Paragraph(
-                            new ParagraphProperties(
-                                new ParagraphStyleId
-                                {
-                                    Val = "Heading1"
-                                }),
-                            new Run(new Text("Quarterly Report"))),
-                        new Paragraph(
-                            new Run(new Text("Revenue grew 15% year-over-year."))),
-                        new Paragraph(
-                            new Run(new Text("Operating costs held flat.")))));
+            [
+                with(new Body(
+                    new Paragraph(
+                        new ParagraphProperties(
+                            new ParagraphStyleId
+                            {
+                                Val = "Heading1"
+                            }),
+                        new Run(new Text("Quarterly Report"))),
+                    new Paragraph(
+                        new Run(new Text("Revenue grew 15% year-over-year."))),
+                    new Paragraph(
+                        new Run(new Text("Operating costs held flat.")))))
+            ];
         }
         #endregion
 

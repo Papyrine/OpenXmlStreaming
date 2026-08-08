@@ -129,23 +129,23 @@ workbook.AddWorksheet(
             new Row(
                 new Cell
                 {
-                    CellValue = new("Q1"),
+                    CellValue = [with("Q1")],
                     DataType = CellValues.InlineString
                 },
                 new Cell
                 {
-                    CellValue = new("1000"),
+                    CellValue = [with("1000")],
                     DataType = CellValues.Number
                 }),
             new Row(
                 new Cell
                 {
-                    CellValue = new("Q2"),
+                    CellValue = [with("Q2")],
                     DataType = CellValues.InlineString
                 },
                 new Cell
                 {
-                    CellValue = new("1200"),
+                    CellValue = [with("1200")],
                     DataType = CellValues.Number
                 }))));
 
@@ -156,12 +156,12 @@ workbook.AddWorksheet(
             new Row(
                 new Cell
                 {
-                    CellValue = new("Rent"),
+                    CellValue = [with("Rent")],
                     DataType = CellValues.InlineString
                 },
                 new Cell
                 {
-                    CellValue = new("500"),
+                    CellValue = [with("500")],
                     DataType = CellValues.Number
                 }))));
 
@@ -545,8 +545,9 @@ using (var doc = WordprocessingDocument.Create(stream, WordprocessingDocumentTyp
     // Add a styles part through the DOM. The SDK wires the relationship
     // from the main part to the styles part automatically.
     var stylesPart = mainPart.AddNewPart<StyleDefinitionsPart>();
-    stylesPart.Styles = new(
-        new Style(
+    stylesPart.Styles =
+    [
+        with(new Style(
             new StyleName
             {
                 Val = "Heading 1"
@@ -568,26 +569,28 @@ using (var doc = WordprocessingDocument.Create(stream, WordprocessingDocumentTyp
         {
             Type = StyleValues.Paragraph,
             StyleId = "Heading1"
-        });
+        })
+    ];
 
     // Assign the main document body. Paragraphs reference the style by id.
     mainPart.Document =
-        new(
-            new Body(
-                new Paragraph(
-                    new ParagraphProperties(
-                        new ParagraphStyleId
-                        {
-                            Val = "Heading1"
-                        }),
-                    new Run(new Text("Quarterly Report"))),
-                new Paragraph(
-                    new Run(new Text("Revenue grew 15% year-over-year."))),
-                new Paragraph(
-                    new Run(new Text("Operating costs held flat.")))));
+    [
+        with(new Body(
+            new Paragraph(
+                new ParagraphProperties(
+                    new ParagraphStyleId
+                    {
+                        Val = "Heading1"
+                    }),
+                new Run(new Text("Quarterly Report"))),
+            new Paragraph(
+                new Run(new Text("Revenue grew 15% year-over-year."))),
+            new Paragraph(
+                new Run(new Text("Operating costs held flat.")))))
+    ];
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L10-L59' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-standard' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L10-L62' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-standard' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -656,7 +659,7 @@ await using (var writer = StreamingDocument.CreateWord(stream, leaveOpen: true))
         ]);
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L70-L128' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-streaming' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L73-L131' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-streaming' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
@@ -713,7 +716,7 @@ await using (var word = new StreamingWordDocumentBuilder(stream, leaveOpen: true
                     new Run(new Text("Operating costs held flat."))))));
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L139-L187' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-builder' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L142-L190' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-builder' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
@@ -736,26 +739,27 @@ using (var doc = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Work
     // Revenue sheet
     var revenuePart = workbookPart.AddNewPart<WorksheetPart>();
     revenuePart.Worksheet =
-        new(
-            new SheetData(
-                new Row(
-                    InlineString("A1", "Quarter"),
-                    InlineString("B1", "Revenue"))
-                {
-                    RowIndex = 1
-                },
-                new Row(
-                    InlineString("A2", "Q1"),
-                    Number("B2", "1000"))
-                {
-                    RowIndex = 2
-                },
-                new Row(
-                    InlineString("A3", "Q2"),
-                    Number("B3", "1200"))
-                {
-                    RowIndex = 3
-                }));
+    [
+        with(new SheetData(
+            new Row(
+                InlineString("A1", "Quarter"),
+                InlineString("B1", "Revenue"))
+            {
+                RowIndex = 1
+            },
+            new Row(
+                InlineString("A2", "Q1"),
+                Number("B2", "1000"))
+            {
+                RowIndex = 2
+            },
+            new Row(
+                InlineString("A3", "Q2"),
+                Number("B3", "1200"))
+            {
+                RowIndex = 3
+            }))
+    ];
     sheets.AppendChild(
         new Sheet
         {
@@ -767,20 +771,21 @@ using (var doc = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Work
     // Expenses sheet
     var expensesPart = workbookPart.AddNewPart<WorksheetPart>();
     expensesPart.Worksheet =
-        new(
-            new SheetData(
-                new Row(
-                    InlineString("A1", "Category"),
-                    InlineString("B1", "Amount"))
-                {
-                    RowIndex = 1
-                },
-                new Row(
-                    InlineString("A2", "Rent"),
-                    Number("B2", "500"))
-                {
-                    RowIndex = 2
-                }));
+    [
+        with(new SheetData(
+            new Row(
+                InlineString("A1", "Category"),
+                InlineString("B1", "Amount"))
+            {
+                RowIndex = 1
+            },
+            new Row(
+                InlineString("A2", "Rent"),
+                Number("B2", "500"))
+            {
+                RowIndex = 2
+            }))
+    ];
     sheets.AppendChild(
         new Sheet
         {
@@ -789,10 +794,10 @@ using (var doc = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Work
             Id = workbookPart.GetIdOfPart(expensesPart)
         });
 
-    workbookPart.Workbook = new(sheets);
+    workbookPart.Workbook = [with(sheets)];
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/SpreadsheetMigrationGuide.cs#L10-L74' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-spreadsheet-standard' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/SpreadsheetMigrationGuide.cs#L10-L76' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-spreadsheet-standard' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -878,7 +883,7 @@ await using (var writer = StreamingDocument.CreateSpreadsheet(stream, leaveOpen:
         ]);
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/SpreadsheetMigrationGuide.cs#L85-L160' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-spreadsheet-streaming' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/SpreadsheetMigrationGuide.cs#L87-L162' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-spreadsheet-streaming' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
@@ -933,7 +938,7 @@ await using (var workbook = new StreamingWorkbookBuilder(stream, leaveOpen: true
 // xl/workbook.xml referencing every worksheet. No sheet URIs or
 // rIds to track.
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/SpreadsheetMigrationGuide.cs#L171-L217' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-spreadsheet-builder' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/SpreadsheetMigrationGuide.cs#L173-L219' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-spreadsheet-builder' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
@@ -975,8 +980,8 @@ using (var doc = PresentationDocument.Create(stream, PresentationDocumentType.Pr
     // Stitch the presentation's lists together using relationship ids
     // the SDK generated when AddNewPart was called.
     presentationPart.Presentation =
-        new(
-            new SlideMasterIdList(
+    [
+        with(new SlideMasterIdList(
                 new SlideMasterId
                 {
                     Id = 2147483648U,
@@ -997,10 +1002,11 @@ using (var doc = PresentationDocument.Create(stream, PresentationDocumentType.Pr
             {
                 Cx = 6858000,
                 Cy = 9144000
-            });
+            })
+    ];
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L14-L64' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-standard' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L14-L65' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-standard' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -1095,7 +1101,7 @@ await using (var writer = StreamingDocument.CreatePresentation(stream, leaveOpen
         ]);
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L75-L156' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-streaming' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L76-L157' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-streaming' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -1114,7 +1120,7 @@ await using (var presentation = new StreamingPresentationBuilder(stream, leaveOp
     presentation.AddSlide(BuildTitleSlide("Kickoff"));
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L167-L175' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-builder' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L168-L176' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-builder' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 

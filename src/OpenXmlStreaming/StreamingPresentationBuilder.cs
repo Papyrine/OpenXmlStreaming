@@ -199,8 +199,8 @@ public sealed class StreamingPresentationBuilder(
     }
 
     static SlideMaster BuildDefaultMaster() =>
-        new(
-            new CommonSlideData(
+    [
+        with(new CommonSlideData(
                 new Background(
                     new BackgroundStyleReference(new Drawing.SchemeColor
                     {
@@ -238,7 +238,8 @@ public sealed class StreamingPresentationBuilder(
             {
                 Id = 2147483649U,
                 RelationshipId = "rId2"
-            }));
+            }))
+    ];
 
     static SlideLayout BuildDefaultLayout() =>
         new(

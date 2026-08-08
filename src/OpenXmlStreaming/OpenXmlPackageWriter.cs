@@ -26,7 +26,7 @@ public sealed class OpenXmlPackageWriter :
     ZipArchive archive;
     List<(Uri PartUri, string ContentType)> contentTypes = [];
     List<PartRelationship> relationships = [];
-    HashSet<string> writtenParts = new(StringComparer.OrdinalIgnoreCase);
+    HashSet<string> writtenParts = [with(StringComparer.OrdinalIgnoreCase)];
     OpenXmlPartEntry? currentEntry;
     bool finished;
     int nextRelId;

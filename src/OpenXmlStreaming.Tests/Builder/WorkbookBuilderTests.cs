@@ -15,10 +15,10 @@ public class WorkbookBuilderTests
                     new SheetData(
                         new Row(
                             new Cell {
-                                CellValue = new("Q1"),
+                                CellValue = [with("Q1")],
                                 DataType = CellValues.InlineString },
                             new Cell {
-                                CellValue = new("1000"),
+                                CellValue = [with("1000")],
                                 DataType = CellValues.Number }))));
 
             workbook.AddWorksheet(
@@ -28,11 +28,11 @@ public class WorkbookBuilderTests
                         new Row(
                             new Cell
                             {
-                                CellValue = new("Rent"), DataType = CellValues.InlineString
+                                CellValue = [with("Rent")], DataType = CellValues.InlineString
                             },
                             new Cell
                             {
-                                CellValue = new("500"),
+                                CellValue = [with("500")],
                                 DataType = CellValues.Number
                             }))));
         }

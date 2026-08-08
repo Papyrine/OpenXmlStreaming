@@ -257,7 +257,7 @@ public class OpenXmlPackageWriterTests
                 new S.Worksheet(new S.SheetData(
                     new S.Row(new S.Cell
                     {
-                        CellValue = new("42"),
+                        CellValue = [with("42")],
                         DataType = S.CellValues.Number
                     }))));
         }

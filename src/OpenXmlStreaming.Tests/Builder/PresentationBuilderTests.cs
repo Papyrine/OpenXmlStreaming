@@ -56,44 +56,45 @@ public class PresentationBuilderTests
     }
 
     static Slide TitleSlide(string title) =>
-        new(
-            new CommonSlideData(
-                new ShapeTree(
-                    new NonVisualGroupShapeProperties(
+    [
+        with(new CommonSlideData(
+            new ShapeTree(
+                new NonVisualGroupShapeProperties(
+                    new NonVisualDrawingProperties
+                    {
+                        Id = 1,
+                        Name = ""
+                    },
+                    new NonVisualGroupShapeDrawingProperties(),
+                    new ApplicationNonVisualDrawingProperties()),
+                new GroupShapeProperties(new Drawing.TransformGroup()),
+                new Shape(
+                    new NonVisualShapeProperties(
                         new NonVisualDrawingProperties
                         {
-                            Id = 1,
-                            Name = ""
+                            Id = 2,
+                            Name = "Title"
                         },
-                        new NonVisualGroupShapeDrawingProperties(),
-                        new ApplicationNonVisualDrawingProperties()),
-                    new GroupShapeProperties(new Drawing.TransformGroup()),
-                    new Shape(
-                        new NonVisualShapeProperties(
-                            new NonVisualDrawingProperties
+                        new NonVisualShapeDrawingProperties(
+                            new Drawing.ShapeLocks
                             {
-                                Id = 2,
-                                Name = "Title"
-                            },
-                            new NonVisualShapeDrawingProperties(
-                                new Drawing.ShapeLocks
+                                NoGrouping = true
+                            }),
+                        new ApplicationNonVisualDrawingProperties(
+                            new PlaceholderShape
+                            {
+                                Type = PlaceholderValues.CenteredTitle
+                            })),
+                    new ShapeProperties(),
+                    new TextBody(
+                        new Drawing.BodyProperties(),
+                        new Drawing.ListStyle(),
+                        new Drawing.Paragraph(
+                            new Drawing.Run(
+                                new Drawing.RunProperties
                                 {
-                                    NoGrouping = true
-                                }),
-                            new ApplicationNonVisualDrawingProperties(
-                                new PlaceholderShape
-                                {
-                                    Type = PlaceholderValues.CenteredTitle
-                                })),
-                        new ShapeProperties(),
-                        new TextBody(
-                            new Drawing.BodyProperties(),
-                            new Drawing.ListStyle(),
-                            new Drawing.Paragraph(
-                                new Drawing.Run(
-                                    new Drawing.RunProperties
-                                    {
-                                        Language = "en-US"
-                                    },
-                                    new Drawing.Text(title))))))));
+                                    Language = "en-US"
+                                },
+                                new Drawing.Text(title))))))))
+    ];
 }

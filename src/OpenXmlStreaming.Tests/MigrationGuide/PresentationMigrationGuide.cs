@@ -37,8 +37,8 @@ public class PresentationMigrationGuide
             // Stitch the presentation's lists together using relationship ids
             // the SDK generated when AddNewPart was called.
             presentationPart.Presentation =
-                new(
-                    new SlideMasterIdList(
+            [
+                with(new SlideMasterIdList(
                         new SlideMasterId
                         {
                             Id = 2147483648U,
@@ -59,7 +59,8 @@ public class PresentationMigrationGuide
                     {
                         Cx = 6858000,
                         Cy = 9144000
-                    });
+                    })
+            ];
         }
 #endregion
 
@@ -179,8 +180,8 @@ public class PresentationMigrationGuide
     }
 
     static SlideMaster BuildSlideMaster() =>
-        new(
-            new CommonSlideData(
+    [
+        with(new CommonSlideData(
                 new Background(
                     new BackgroundStyleReference(
                         new Drawing.SchemeColor
@@ -219,7 +220,8 @@ public class PresentationMigrationGuide
             {
                 Id = 2147483649U,
                 RelationshipId = "rId2"
-            }));
+            }))
+    ];
 
     static SlideLayout BuildSlideLayout() =>
         new(
@@ -240,46 +242,47 @@ public class PresentationMigrationGuide
         };
 
     static Slide BuildTitleSlide(string title) =>
-        new(
-            new CommonSlideData(
-                new ShapeTree(
-                    new NonVisualGroupShapeProperties(
+    [
+        with(new CommonSlideData(
+            new ShapeTree(
+                new NonVisualGroupShapeProperties(
+                    new NonVisualDrawingProperties
+                    {
+                        Id = 1,
+                        Name = ""
+                    },
+                    new NonVisualGroupShapeDrawingProperties(),
+                    new ApplicationNonVisualDrawingProperties()),
+                new GroupShapeProperties(new Drawing.TransformGroup()),
+                new Shape(
+                    new NonVisualShapeProperties(
                         new NonVisualDrawingProperties
                         {
-                            Id = 1,
-                            Name = ""
+                            Id = 2,
+                            Name = "Title"
                         },
-                        new NonVisualGroupShapeDrawingProperties(),
-                        new ApplicationNonVisualDrawingProperties()),
-                    new GroupShapeProperties(new Drawing.TransformGroup()),
-                    new Shape(
-                        new NonVisualShapeProperties(
-                            new NonVisualDrawingProperties
+                        new NonVisualShapeDrawingProperties(
+                            new Drawing.ShapeLocks
                             {
-                                Id = 2,
-                                Name = "Title"
-                            },
-                            new NonVisualShapeDrawingProperties(
-                                new Drawing.ShapeLocks
+                                NoGrouping = true
+                            }),
+                        new ApplicationNonVisualDrawingProperties(
+                            new PlaceholderShape
+                            {
+                                Type = PlaceholderValues.CenteredTitle
+                            })),
+                    new ShapeProperties(),
+                    new TextBody(
+                        new Drawing.BodyProperties(),
+                        new Drawing.ListStyle(),
+                        new Drawing.Paragraph(
+                            new Drawing.Run(
+                                new Drawing.RunProperties
                                 {
-                                    NoGrouping = true
-                                }),
-                            new ApplicationNonVisualDrawingProperties(
-                                new PlaceholderShape
-                                {
-                                    Type = PlaceholderValues.CenteredTitle
-                                })),
-                        new ShapeProperties(),
-                        new TextBody(
-                            new Drawing.BodyProperties(),
-                            new Drawing.ListStyle(),
-                            new Drawing.Paragraph(
-                                new Drawing.Run(
-                                    new Drawing.RunProperties
-                                    {
-                                        Language = "en-US"
-                                    },
-                                    new Drawing.Text(title))))))));
+                                    Language = "en-US"
+                                },
+                                new Drawing.Text(title))))))))
+    ];
 
     static Drawing.Theme BuildTheme() =>
         new(

@@ -48,7 +48,7 @@ static class IoScenarioContent
                 row.AppendChild(
                     new Cell
                 {
-                    CellValue = new((r * largeSpreadsheetCols + (uint)c).ToString()),
+                    CellValue = [with((r * largeSpreadsheetCols + (uint) c).ToString())],
                     DataType = CellValues.Number,
                 });
             }
@@ -65,15 +65,17 @@ static class IoScenarioContent
 
         var workbookPart = doc.AddWorkbookPart();
         var sheetPart = workbookPart.AddNewPart<WorksheetPart>();
-        sheetPart.Worksheet = new(BuildLargeSheetData());
-        workbookPart.Workbook = new(
-            new Sheets(
+        sheetPart.Worksheet = [with(BuildLargeSheetData())];
+        workbookPart.Workbook =
+        [
+            with(new Sheets(
                 new Sheet
                 {
                     Name = "Sheet1",
                     SheetId = 1,
                     Id = workbookPart.GetIdOfPart(sheetPart)
-                }));
+                }))
+        ];
     }
 
     public static void WriteSpreadsheetForwardOnly(Stream target)
@@ -107,7 +109,7 @@ static class IoScenarioContent
     public static void WriteWordStandard(Stream target)
     {
         using var doc = WordprocessingDocument.Create(target, WordprocessingDocumentType.Document);
-        doc.AddMainDocumentPart().Document = new(BuildLargeWordBody());
+        doc.AddMainDocumentPart().Document = [with(BuildLargeWordBody())];
     }
 
     public static void WriteWordForwardOnly(Stream target)

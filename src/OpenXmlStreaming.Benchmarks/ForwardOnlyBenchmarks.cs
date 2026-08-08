@@ -10,10 +10,11 @@ public class ForwardOnlyBenchmarks
         using var stream = new NonwritingStream();
         using var doc = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document);
         doc.AddMainDocumentPart().Document =
-            new(
-                new Body(
-                    new Paragraph(
-                        new W.Run(new W.Text("Hello, world!")))));
+        [
+            with(new Body(
+                new Paragraph(
+                    new W.Run(new W.Text("Hello, world!")))))
+        ];
     }
 
     [Benchmark]
@@ -48,7 +49,7 @@ public class ForwardOnlyBenchmarks
                         new W.Text("Paragraph " + i))));
         }
 
-        doc.AddMainDocumentPart().Document = new(body);
+        doc.AddMainDocumentPart().Document = [with(body)];
     }
 
     [Benchmark]
@@ -108,11 +109,12 @@ public class ForwardOnlyBenchmarks
                         new W.Text("Content for section " + i + " with some additional text to make it realistic."))));
         }
 
-        mainPart.Document = new(body);
+        mainPart.Document = [with(body)];
 
         var stylesPart = mainPart.AddNewPart<StyleDefinitionsPart>();
-        stylesPart.Styles = new(
-            new Style(
+        stylesPart.Styles =
+        [
+            with(new Style(
                 new StyleName
                 {
                     Val = "heading 1"
@@ -124,7 +126,8 @@ public class ForwardOnlyBenchmarks
             {
                 Type = StyleValues.Paragraph,
                 StyleId = "Heading1"
-            });
+            })
+        ];
     }
 
     [Benchmark]
@@ -200,23 +203,26 @@ public class ForwardOnlyBenchmarks
         var workbookPart = doc.AddWorkbookPart();
         var sheetPart = workbookPart.AddNewPart<WorksheetPart>();
         sheetPart.Worksheet =
-            new(
-                new SheetData(
-                    new Row(
-                        new Cell
-                        {
-                            CellValue = new("Hello"),
-                            DataType = CellValues.String
-                        })));
+        [
+            with(new SheetData(
+                new Row(
+                    new Cell
+                    {
+                        CellValue = [with("Hello")],
+                        DataType = CellValues.String
+                    })))
+        ];
 
-        workbookPart.Workbook = new(
-            new Sheets(
+        workbookPart.Workbook =
+        [
+            with(new Sheets(
                 new Sheet
                 {
                     Name = "Sheet1",
                     SheetId = 1,
                     Id = workbookPart.GetIdOfPart(sheetPart)
-                }));
+                }))
+        ];
     }
 
     [Benchmark]
@@ -233,7 +239,7 @@ public class ForwardOnlyBenchmarks
                     new Row(
                         new Cell
                         {
-                            CellValue = new("Hello"),
+                            CellValue = [with("Hello")],
                             DataType = CellValues.String
                         }))));
 
@@ -279,7 +285,7 @@ public class ForwardOnlyBenchmarks
                 row.AppendChild(
                     new Cell
                     {
-                        CellValue = new((r * 10 + c).ToString()),
+                        CellValue = [with((r * 10 + c).ToString())],
                         DataType = CellValues.Number,
                     });
             }
@@ -287,16 +293,18 @@ public class ForwardOnlyBenchmarks
             sheetData.AppendChild(row);
         }
 
-        sheetPart.Worksheet = new(sheetData);
+        sheetPart.Worksheet = [with(sheetData)];
 
-        workbookPart.Workbook = new(
-            new Sheets(
+        workbookPart.Workbook =
+        [
+            with(new Sheets(
                 new Sheet
                 {
                     Name = "Sheet1",
                     SheetId = 1,
                     Id = workbookPart.GetIdOfPart(sheetPart)
-                }));
+                }))
+        ];
     }
 
     [Benchmark]
@@ -319,7 +327,7 @@ public class ForwardOnlyBenchmarks
                 row.AppendChild(
                     new Cell
                     {
-                        CellValue = new((r * 10 + c).ToString()),
+                        CellValue = [with((r * 10 + c).ToString())],
                         DataType = CellValues.Number,
                     });
             }
@@ -378,7 +386,7 @@ public class ForwardOnlyBenchmarks
                     row.AppendChild(
                         new Cell
                         {
-                            CellValue = new((s * 5000 + r * 10 + c).ToString()),
+                            CellValue = [with((s * 5000 + r * 10 + c).ToString())],
                             DataType = CellValues.Number,
                         });
                 }
@@ -386,7 +394,7 @@ public class ForwardOnlyBenchmarks
                 sheetData.AppendChild(row);
             }
 
-            sheetPart.Worksheet = new(sheetData);
+            sheetPart.Worksheet = [with(sheetData)];
 
             sheets.AppendChild(
                 new Sheet
@@ -397,7 +405,7 @@ public class ForwardOnlyBenchmarks
                 });
         }
 
-        workbookPart.Workbook = new(sheets);
+        workbookPart.Workbook = [with(sheets)];
     }
 
     [Benchmark]
@@ -424,7 +432,7 @@ public class ForwardOnlyBenchmarks
                     row.AppendChild(
                         new Cell
                         {
-                            CellValue = new((s * 5000 + r * 10 + c).ToString()),
+                            CellValue = [with((s * 5000 + r * 10 + c).ToString())],
                             DataType = CellValues.Number,
                         });
                 }
@@ -476,13 +484,14 @@ public class ForwardOnlyBenchmarks
         var presentationPart = doc.AddPresentationPart();
         var slidePart = presentationPart.AddNewPart<SlidePart>();
         slidePart.Slide =
-            new(
-                new P.CommonSlideData(
-                    new P.ShapeTree()));
+        [
+            with(new P.CommonSlideData(
+                new P.ShapeTree()))
+        ];
 
         presentationPart.Presentation =
-            new(
-                new P.SlideIdList(
+        [
+            with(new P.SlideIdList(
                     new P.SlideId
                     {
                         Id = 256,
@@ -492,7 +501,8 @@ public class ForwardOnlyBenchmarks
                 {
                     Cx = 9144000,
                     Cy = 6858000
-                });
+                })
+        ];
     }
 
     [Benchmark]
@@ -544,14 +554,15 @@ public class ForwardOnlyBenchmarks
         {
             var slidePart = presentationPart.AddNewPart<SlidePart>();
             slidePart.Slide =
-                new(
-                    new P.CommonSlideData(
-                        new P.ShapeTree(
-                            new P.Shape(
-                                new P.TextBody(
-                                    new DocumentFormat.OpenXml.Drawing.Paragraph(
-                                        new DocumentFormat.OpenXml.Drawing.Run(
-                                            new DocumentFormat.OpenXml.Drawing.Text("Slide " + (i + 1)))))))));
+            [
+                with(new P.CommonSlideData(
+                    new P.ShapeTree(
+                        new P.Shape(
+                            new P.TextBody(
+                                new DocumentFormat.OpenXml.Drawing.Paragraph(
+                                    new DocumentFormat.OpenXml.Drawing.Run(
+                                        new DocumentFormat.OpenXml.Drawing.Text("Slide " + (i + 1)))))))))
+            ];
 
             slideIdList.AppendChild(
                 new P.SlideId
@@ -562,13 +573,14 @@ public class ForwardOnlyBenchmarks
         }
 
         presentationPart.Presentation =
-            new(
-                slideIdList,
+        [
+            with(slideIdList,
                 new P.SlideSize
                 {
                     Cx = 9144000,
                     Cy = 6858000
-                });
+                })
+        ];
     }
 
     [Benchmark]
@@ -669,7 +681,7 @@ public class ForwardOnlyBenchmarks
                                     new DocumentFormat.OpenXml.Drawing.Text("Shape " + j + " on Slide " + (i + 1)))))));
             }
 
-            slidePart.Slide = new(new P.CommonSlideData(shapeTree));
+            slidePart.Slide = [with(new P.CommonSlideData(shapeTree))];
 
             slideIdList.AppendChild(
                 new P.SlideId
@@ -680,13 +692,14 @@ public class ForwardOnlyBenchmarks
         }
 
         presentationPart.Presentation =
-            new(
-                slideIdList,
+        [
+            with(slideIdList,
                 new P.SlideSize
                 {
                     Cx = 9144000,
                     Cy = 6858000
-                });
+                })
+        ];
     }
 
     [Benchmark]

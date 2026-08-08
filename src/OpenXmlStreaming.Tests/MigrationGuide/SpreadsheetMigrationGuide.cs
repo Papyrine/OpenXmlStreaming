@@ -16,26 +16,27 @@ public class SpreadsheetMigrationGuide
             // Revenue sheet
             var revenuePart = workbookPart.AddNewPart<WorksheetPart>();
             revenuePart.Worksheet =
-                new(
-                    new SheetData(
-                        new Row(
-                            InlineString("A1", "Quarter"),
-                            InlineString("B1", "Revenue"))
-                        {
-                            RowIndex = 1
-                        },
-                        new Row(
-                            InlineString("A2", "Q1"),
-                            Number("B2", "1000"))
-                        {
-                            RowIndex = 2
-                        },
-                        new Row(
-                            InlineString("A3", "Q2"),
-                            Number("B3", "1200"))
-                        {
-                            RowIndex = 3
-                        }));
+            [
+                with(new SheetData(
+                    new Row(
+                        InlineString("A1", "Quarter"),
+                        InlineString("B1", "Revenue"))
+                    {
+                        RowIndex = 1
+                    },
+                    new Row(
+                        InlineString("A2", "Q1"),
+                        Number("B2", "1000"))
+                    {
+                        RowIndex = 2
+                    },
+                    new Row(
+                        InlineString("A3", "Q2"),
+                        Number("B3", "1200"))
+                    {
+                        RowIndex = 3
+                    }))
+            ];
             sheets.AppendChild(
                 new Sheet
                 {
@@ -47,20 +48,21 @@ public class SpreadsheetMigrationGuide
             // Expenses sheet
             var expensesPart = workbookPart.AddNewPart<WorksheetPart>();
             expensesPart.Worksheet =
-                new(
-                    new SheetData(
-                        new Row(
-                            InlineString("A1", "Category"),
-                            InlineString("B1", "Amount"))
-                        {
-                            RowIndex = 1
-                        },
-                        new Row(
-                            InlineString("A2", "Rent"),
-                            Number("B2", "500"))
-                        {
-                            RowIndex = 2
-                        }));
+            [
+                with(new SheetData(
+                    new Row(
+                        InlineString("A1", "Category"),
+                        InlineString("B1", "Amount"))
+                    {
+                        RowIndex = 1
+                    },
+                    new Row(
+                        InlineString("A2", "Rent"),
+                        Number("B2", "500"))
+                    {
+                        RowIndex = 2
+                    }))
+            ];
             sheets.AppendChild(
                 new Sheet
                 {
@@ -69,7 +71,7 @@ public class SpreadsheetMigrationGuide
                     Id = workbookPart.GetIdOfPart(expensesPart)
                 });
 
-            workbookPart.Workbook = new(sheets);
+            workbookPart.Workbook = [with(sheets)];
         }
 #endregion
 
@@ -225,7 +227,7 @@ public class SpreadsheetMigrationGuide
         {
             CellReference = reference,
             DataType = CellValues.InlineString,
-            InlineString = new(new Text(value))
+            InlineString = [with(new Text(value))]
         };
 
     static Cell Number(string reference, string value) =>
@@ -233,6 +235,6 @@ public class SpreadsheetMigrationGuide
         {
             CellReference = reference,
             DataType = CellValues.Number,
-            CellValue = new(value)
+            CellValue = [with(value)]
         };
 }

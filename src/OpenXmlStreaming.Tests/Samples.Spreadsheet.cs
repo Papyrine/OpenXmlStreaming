@@ -87,23 +87,23 @@ public partial class Samples
                     new Row(
                         new Cell
                         {
-                            CellValue = new("Q1"),
+                            CellValue = [with("Q1")],
                             DataType = CellValues.InlineString
                         },
                         new Cell
                         {
-                            CellValue = new("1000"),
+                            CellValue = [with("1000")],
                             DataType = CellValues.Number
                         }),
                     new Row(
                         new Cell
                         {
-                            CellValue = new("Q2"),
+                            CellValue = [with("Q2")],
                             DataType = CellValues.InlineString
                         },
                         new Cell
                         {
-                            CellValue = new("1200"),
+                            CellValue = [with("1200")],
                             DataType = CellValues.Number
                         }))));
 
@@ -114,12 +114,12 @@ public partial class Samples
                     new Row(
                         new Cell
                         {
-                            CellValue = new("Rent"),
+                            CellValue = [with("Rent")],
                             DataType = CellValues.InlineString
                         },
                         new Cell
                         {
-                            CellValue = new("500"),
+                            CellValue = [with("500")],
                             DataType = CellValues.Number
                         }))));
 
