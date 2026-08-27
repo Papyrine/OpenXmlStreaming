@@ -26,7 +26,17 @@ public class PresentationBuilderTests
         });
 
         stream.Position = 0;
-        await Verify(stream, extension: "pptx");
+        await Verify(stream, extension: "pptx")
+            .Snapshot(
+                """
+                {
+                  SlideCount: 2,
+                  Text:
+                Kickoff
+                ---
+                Agenda
+                }
+                """);
     }
 
     [Test]

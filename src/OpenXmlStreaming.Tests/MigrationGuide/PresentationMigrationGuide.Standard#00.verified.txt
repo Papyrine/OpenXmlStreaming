@@ -1,4 +1,0 @@
-﻿{
-  SlideCount: 1,
-  Text: Kickoff
-}

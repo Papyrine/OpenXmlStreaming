@@ -31,7 +31,13 @@ public class OpenXmlPackageWriterTests
         Assert.That(doc.MainDocumentPart.Document!.Body!.InnerText, Is.EqualTo("Hello!"));
         stream.Position = 0;
 
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot(
+                """
+                {
+                  Text: Hello!
+                }
+                """);
     }
 
     [Test]
@@ -53,7 +59,13 @@ public class OpenXmlPackageWriterTests
         Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Forward-only!"));
         stream.Position = 0;
 
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot(
+                """
+                {
+                  Text: Forward-only!
+                }
+                """);
     }
 
     [Test]
@@ -81,7 +93,13 @@ public class OpenXmlPackageWriterTests
         Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Non-seekable!"));
         stream.Position = 0;
 
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot(
+                """
+                {
+                  Text: Non-seekable!
+                }
+                """);
     }
 
     [Test]
@@ -115,7 +133,13 @@ public class OpenXmlPackageWriterTests
         Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Streamed!"));
         stream.Position = 0;
 
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot(
+                """
+                {
+                  Text: Streamed!
+                }
+                """);
     }
 
     [Test]
@@ -160,7 +184,8 @@ public class OpenXmlPackageWriterTests
         Assert.That(rels, Is.Not.Empty);
         stream.Position = 0;
 
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot("{}");
     }
 
     [Test]
@@ -290,7 +315,8 @@ public class OpenXmlPackageWriterTests
         Assert.That(doc.PresentationPart!.Presentation, Is.Not.Null);
         stream.Position = 0;
 
-        await Verify(stream, extension: "pptx");
+        await Verify(stream, extension: "pptx")
+            .Snapshot("{}");
     }
 
     [Test]
@@ -329,7 +355,8 @@ public class OpenXmlPackageWriterTests
         Assert.That(doc.MainDocumentPart!.HyperlinkRelationships, Is.Not.Empty);
         stream.Position = 0;
 
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot("{}");
     }
 
     [Test]
@@ -714,6 +741,7 @@ public class OpenXmlPackageWriterTests
 
         stream.Position = 0;
 
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot("{}");
     }
 }

@@ -65,7 +65,14 @@ public class PresentationMigrationGuide
 #endregion
 
         stream.Position = 0;
-        await Verify(stream, extension: "pptx");
+        await Verify(stream, extension: "pptx")
+            .Snapshot(
+                """
+                {
+                  SlideCount: 1,
+                  Text: Kickoff
+                }
+                """);
     }
 
     [Test]
@@ -157,7 +164,14 @@ public class PresentationMigrationGuide
 #endregion
 
         stream.Position = 0;
-        await Verify(stream, extension: "pptx");
+        await Verify(stream, extension: "pptx")
+            .Snapshot(
+                """
+                {
+                  SlideCount: 1,
+                  Text: Kickoff
+                }
+                """);
     }
 
     [Test]
@@ -176,7 +190,14 @@ public class PresentationMigrationGuide
         #endregion
 
         stream.Position = 0;
-        await Verify(stream, extension: "pptx");
+        await Verify(stream, extension: "pptx")
+            .Snapshot(
+                """
+                {
+                  SlideCount: 1,
+                  Text: Kickoff
+                }
+                """);
     }
 
     static SlideMaster BuildSlideMaster() =>

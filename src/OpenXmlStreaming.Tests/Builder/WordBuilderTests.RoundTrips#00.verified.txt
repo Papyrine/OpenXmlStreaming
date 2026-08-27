@@ -1,5 +1,0 @@
-﻿{
-  Text:
-Quarterly Report
-Revenue grew 15% year-over-year.
-}

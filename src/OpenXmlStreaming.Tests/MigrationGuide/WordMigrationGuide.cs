@@ -62,7 +62,16 @@ public class WordMigrationGuide
         #endregion
 
         stream.Position = 0;
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot(
+                """
+                {
+                  Text:
+                Quarterly Report
+                Revenue grew 15% year-over-year.
+                Operating costs held flat.
+                }
+                """);
     }
 
     [Test]
@@ -131,7 +140,16 @@ public class WordMigrationGuide
         #endregion
 
         stream.Position = 0;
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot(
+                """
+                {
+                  Text:
+                Quarterly Report
+                Revenue grew 15% year-over-year.
+                Operating costs held flat.
+                }
+                """);
     }
 
     [Test]
@@ -190,6 +208,15 @@ public class WordMigrationGuide
         #endregion
 
         stream.Position = 0;
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot(
+                """
+                {
+                  Text:
+                Quarterly Report
+                Revenue grew 15% year-over-year.
+                Operating costs held flat.
+                }
+                """);
     }
 }

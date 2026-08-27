@@ -67,7 +67,15 @@ public class WordBuilderTests
         Assert.That(doc.MainDocumentPart.StyleDefinitionsPart, Is.Not.Null);
 
         stream.Position = 0;
-        await Verify(stream, extension: "docx");
+        await Verify(stream, extension: "docx")
+            .Snapshot(
+                """
+                {
+                  Text:
+                Quarterly Report
+                Revenue grew 15% year-over-year.
+                }
+                """);
     }
 
     [Test]

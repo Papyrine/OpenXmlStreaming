@@ -659,7 +659,7 @@ await using (var writer = StreamingDocument.CreateWord(stream, leaveOpen: true))
         ]);
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L73-L131' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-streaming' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L82-L140' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-streaming' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
@@ -716,7 +716,7 @@ await using (var word = new StreamingWordDocumentBuilder(stream, leaveOpen: true
                     new Run(new Text("Operating costs held flat."))))));
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L142-L190' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-builder' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/WordMigrationGuide.cs#L160-L208' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-word-builder' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
@@ -1101,7 +1101,7 @@ await using (var writer = StreamingDocument.CreatePresentation(stream, leaveOpen
         ]);
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L76-L157' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-streaming' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L83-L164' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-streaming' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -1120,7 +1120,7 @@ await using (var presentation = new StreamingPresentationBuilder(stream, leaveOp
     presentation.AddSlide(BuildTitleSlide("Kickoff"));
 }
 ```
-<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L168-L176' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-builder' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/OpenXmlStreaming.Tests/MigrationGuide/PresentationMigrationGuide.cs#L182-L190' title='Snippet source file'>snippet source</a> | <a href='#snippet-migration-presentation-builder' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
