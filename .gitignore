@@ -41,3 +41,4 @@ nugets/
 *~$*.xlsx
 /src/OpenXmlHtml.Benchmarks/BenchmarkDotNet.Artifacts
 /src/OpenXmlStreaming.Benchmarks/BenchmarkDotNet.Artifacts
+*.lnk
