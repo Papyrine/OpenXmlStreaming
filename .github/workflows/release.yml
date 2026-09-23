@@ -1,21 +1,23 @@
-name: build
+name: release
 
 on:
   push:
-    # Branches only: tag pushes are handled by release.yml.
-    branches: ['**']
-  pull_request:
-  workflow_dispatch:
+    tags: ['*']
 
 jobs:
-  build:
+  publish:
+    # Windows, same as build.yml: the tests rely on the bundled fonts installed below.
     runs-on: windows-latest
+    permissions:
+      contents: read
+      # Lets the job mint the OIDC token nuget.org trades for a short-lived publishing key.
+      id-token: write
     env:
       DOTNET_NOLOGO: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
       # SponsorCheck bundles the sponsor list during pack on non-PR builds and needs a
-      # classic PAT (org secret). PR builds skip it.
+      # classic PAT (org secret).
       GitHubToken: ${{ secrets.SPONSOR_CHECK_TOKEN }}
 
     steps:
@@ -69,8 +71,15 @@ jobs:
         with:
           global-json-file: global.json
 
+      # The tag is the version: tag 1.2.3 (or v1.2.3) publishes 1.2.3. The Version in
+      # Directory.Build.props is only what local builds get.
+      - name: Resolve the version from the tag
+        shell: bash
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
       - name: Build
-        run: dotnet build src --configuration Release
+        # Packs as a side effect: GeneratePackageOnBuild writes the package to ./nugets.
+        run: dotnet build src --configuration Release -p:Version=${{ env.version }}
 
       - name: Test
         run: dotnet test src --configuration Release --no-build --no-restore
@@ -84,9 +93,28 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+      # OpenXmlStreaming is the only packable project (Benchmarks sets IsPackable=false).
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
           name: nugets
-          path: nugets/*.nupkg
-          if-no-files-found: ignore
+          path: nugets/OpenXmlStreaming.*.nupkg
+          if-no-files-found: error
+
+      # Trusted publishing: no stored API key. nuget.org validates GitHub's OIDC token against the
+      # policy naming this repository and this workflow file, and returns a key good for an hour —
+      # so this stays immediately before the push.
+      - name: NuGet login
+        id: login
+        uses: NuGet/login@v1
+        with:
+          # The nuget.org account the trusted publishing policy belongs to.
+          user: SimonCropp
+
+      - name: Push to nuget.org
+        shell: bash
+        run: >
+          dotnet nuget push nugets/OpenXmlStreaming.*.nupkg
+          --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
