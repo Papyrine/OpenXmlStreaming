@@ -1,6 +1,6 @@
 # <img src="/src/icon.png" height="30px"> OpenXmlStreaming
 
-[![Build status](https://img.shields.io/appveyor/build/SimonCropp/OpenXmlStreaming)](https://ci.appveyor.com/project/SimonCropp/OpenXmlStreaming)
+[![Build status](https://github.com/Papyrine/OpenXmlStreaming/actions/workflows/build.yml/badge.svg)](https://github.com/Papyrine/OpenXmlStreaming/actions/workflows/build.yml)
 [![NuGet Status](https://img.shields.io/nuget/v/OpenXmlStreaming.svg?label=OpenXmlStreaming)](https://www.nuget.org/packages/OpenXmlStreaming/)
 
 Forward-only writer for Office Open XML documents (`.docx`, `.xlsx`, `.pptx`). Writes directly to any writable stream — including non-seekable streams such as HTTP response bodies — without buffering the whole document in a `MemoryStream`.
