@@ -1,4 +1,4 @@
-using DocumentFormat.OpenXml.Presentation;
+﻿using DocumentFormat.OpenXml.Presentation;
 using Drawing = DocumentFormat.OpenXml.Drawing;
 
 public class PresentationBuilderTests
@@ -18,12 +18,12 @@ public class PresentationBuilderTests
         using var doc = PresentationDocument.Open(stream, false);
         var slideIds = doc.PresentationPart!.Presentation!.SlideIdList!.Elements<SlideId>().ToList();
 
-        Assert.Multiple(() =>
+        using (Assert.Multiple())
         {
-            Assert.That(slideIds, Has.Count.EqualTo(2));
-            Assert.That(doc.PresentationPart.SlideParts.Count(), Is.EqualTo(2));
-            Assert.That(doc.PresentationPart.SlideMasterParts.Count(), Is.EqualTo(1));
-        });
+            await Assert.That(slideIds).Count().IsEqualTo(2);
+            await Assert.That(doc.PresentationPart.SlideParts.Count()).IsEqualTo(2);
+            await Assert.That(doc.PresentationPart.SlideMasterParts.Count()).IsEqualTo(1);
+        }
 
         stream.Position = 0;
         await Verify(stream, extension: "pptx")
@@ -51,18 +51,18 @@ public class PresentationBuilderTests
 
         stream.Position = 0;
         using var doc = PresentationDocument.Open(stream, false);
-        Assert.That(doc.PresentationPart!.Presentation, Is.Not.Null);
+        await Assert.That(doc.PresentationPart!.Presentation).IsNotNull();
     }
 
     [Test]
-    public void AddAfterDispose_Throws()
+    public async Task AddAfterDispose_Throws()
     {
         using var stream = new MemoryStream();
         var presentation = new StreamingPresentationBuilder(stream, leaveOpen: true);
         presentation.Dispose();
 
-        Assert.Throws<InvalidOperationException>(() =>
-            presentation.AddSlide(TitleSlide("Late")));
+        await Assert.That(() =>
+            presentation.AddSlide(TitleSlide("Late"))).ThrowsExactly<InvalidOperationException>();
     }
 
     static Slide TitleSlide(string title) =>

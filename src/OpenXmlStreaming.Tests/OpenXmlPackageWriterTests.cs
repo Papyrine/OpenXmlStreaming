@@ -1,9 +1,8 @@
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
 using P = DocumentFormat.OpenXml.Presentation;
 using S = DocumentFormat.OpenXml.Spreadsheet;
 // ReSharper disable MethodHasAsyncOverload
 
-[TestFixture]
 public class OpenXmlPackageWriterTests
 {
     [Test]
@@ -26,9 +25,9 @@ public class OpenXmlPackageWriterTests
 
         stream.Position = 0;
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart, Is.Not.Null);
-        Assert.That(doc.MainDocumentPart!.Document, Is.Not.Null);
-        Assert.That(doc.MainDocumentPart.Document!.Body!.InnerText, Is.EqualTo("Hello!"));
+        await Assert.That(doc.MainDocumentPart).IsNotNull();
+        await Assert.That(doc.MainDocumentPart!.Document).IsNotNull();
+        await Assert.That(doc.MainDocumentPart.Document!.Body!.InnerText).IsEqualTo("Hello!");
         stream.Position = 0;
 
         await Verify(stream, extension: "docx")
@@ -56,7 +55,7 @@ public class OpenXmlPackageWriterTests
         stream.Position = 0;
 
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Forward-only!"));
+        await Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText).IsEqualTo("Forward-only!");
         stream.Position = 0;
 
         await Verify(stream, extension: "docx")
@@ -90,7 +89,7 @@ public class OpenXmlPackageWriterTests
         stream.Position = 0;
 
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Non-seekable!"));
+        await Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText).IsEqualTo("Non-seekable!");
         stream.Position = 0;
 
         await Verify(stream, extension: "docx")
@@ -130,7 +129,7 @@ public class OpenXmlPackageWriterTests
         stream.Position = 0;
 
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Streamed!"));
+        await Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText).IsEqualTo("Streamed!");
         stream.Position = 0;
 
         await Verify(stream, extension: "docx")
@@ -181,7 +180,7 @@ public class OpenXmlPackageWriterTests
 
         using var doc = WordprocessingDocument.Open(stream, false);
         var rels = doc.MainDocumentPart!.GetPartsOfType<StyleDefinitionsPart>();
-        Assert.That(rels, Is.Not.Empty);
+        await Assert.That(rels).IsNotEmpty();
         stream.Position = 0;
 
         await Verify(stream, extension: "docx")
@@ -189,7 +188,7 @@ public class OpenXmlPackageWriterTests
     }
 
     [Test]
-    public void DuplicatePartUri_Throws()
+    public async Task DuplicatePartUri_Throws()
     {
         using var stream = new MemoryStream();
         using var writer = new OpenXmlPackageWriter(stream);
@@ -199,29 +198,29 @@ public class OpenXmlPackageWriterTests
             "application/xml",
             new Document());
 
-        Assert.Throws<InvalidOperationException>(() =>
+        await Assert.That(() =>
             writer.WritePart(
                 new("/word/document.xml", UriKind.Relative),
                 "application/xml",
-                new Document()));
+                new Document())).ThrowsExactly<InvalidOperationException>();
     }
 
     [Test]
-    public void OperationsAfterFinish_Throw()
+    public async Task OperationsAfterFinish_Throw()
     {
         using var stream = new MemoryStream();
         var writer = new OpenXmlPackageWriter(stream, leaveOpen: true);
         writer.Finish();
 
-        Assert.Throws<InvalidOperationException>(() =>
-            writer.AddRelationship(new("/foo.xml", UriKind.Relative), "type"));
+        await Assert.That(() =>
+            writer.AddRelationship(new("/foo.xml", UriKind.Relative), "type")).ThrowsExactly<InvalidOperationException>();
 
-        Assert.Throws<InvalidOperationException>(() =>
-            writer.CreatePart(new("/foo.xml", UriKind.Relative), "type"));
+        await Assert.That(() =>
+            writer.CreatePart(new("/foo.xml", UriKind.Relative), "type")).ThrowsExactly<InvalidOperationException>();
     }
 
     [Test]
-    public void AutoDisposesPreviousPartEntry()
+    public async Task AutoDisposesPreviousPartEntry()
     {
         using var stream = new MemoryStream();
 
@@ -247,7 +246,7 @@ public class OpenXmlPackageWriterTests
             new("/word/styles.xml", UriKind.Relative),
             "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml");
 
-        Assert.Throws<ObjectDisposedException>(() => _ = entry1.Stream);
+        await Assert.That(() => _ = entry1.Stream).ThrowsExactly<ObjectDisposedException>();
 
         entry2.Dispose();
     }
@@ -290,7 +289,7 @@ public class OpenXmlPackageWriterTests
         stream.Position = 0;
 
         using var doc = SpreadsheetDocument.Open(stream, false);
-        Assert.That(doc.WorkbookPart!.Workbook!.Sheets!, Is.Not.Empty);
+        await Assert.That(doc.WorkbookPart!.Workbook!.Sheets!).IsNotEmpty();
         stream.Position = 0;
 
         await Verify(stream, extension: "xlsx");
@@ -312,7 +311,7 @@ public class OpenXmlPackageWriterTests
         stream.Position = 0;
 
         using var doc = PresentationDocument.Open(stream, false);
-        Assert.That(doc.PresentationPart!.Presentation, Is.Not.Null);
+        await Assert.That(doc.PresentationPart!.Presentation).IsNotNull();
         stream.Position = 0;
 
         await Verify(stream, extension: "pptx")
@@ -352,7 +351,7 @@ public class OpenXmlPackageWriterTests
         stream.Position = 0;
 
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart!.HyperlinkRelationships, Is.Not.Empty);
+        await Assert.That(doc.MainDocumentPart!.HyperlinkRelationships).IsNotEmpty();
         stream.Position = 0;
 
         await Verify(stream, extension: "docx")
@@ -373,12 +372,12 @@ public class OpenXmlPackageWriterTests
         stream.Position = 0;
         await using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
         var relsEntry = archive.GetEntry("_rels/root.xml.rels");
-        Assert.That(relsEntry, Is.Not.Null);
+        await Assert.That(relsEntry).IsNotNull();
 
         await using var relsStream = relsEntry!.Open();
         using var reader = new StreamReader(relsStream);
         var xml = await reader.ReadToEndAsync();
-        Assert.That(xml, Does.Contain("Target=\"other.xml\""));
+        await Assert.That(xml).Contains("Target=\"other.xml\"");
     }
 
     [Test]
@@ -387,7 +386,7 @@ public class OpenXmlPackageWriterTests
         using var stream = new MemoryStream();
         await using var writer = new OpenXmlPackageWriter(stream);
         var id = writer.AddRelationship(new("/foo.xml", UriKind.Relative), "type");
-        Assert.That(id, Does.StartWith("rId"));
+        await Assert.That(id).StartsWith("rId");
     }
 
     [Test]
@@ -397,18 +396,18 @@ public class OpenXmlPackageWriterTests
         await using var writer = new OpenXmlPackageWriter(stream);
         using var entry = writer.CreatePart(new("/foo.xml", UriKind.Relative), "text/xml");
         var id = entry.AddRelationship(new("bar.xml", UriKind.Relative), "type");
-        Assert.That(id, Does.StartWith("rId"));
+        await Assert.That(id).StartsWith("rId");
     }
 
     [Test]
-    public void PartEntry_AddRelationship_AfterDispose_Throws()
+    public async Task PartEntry_AddRelationship_AfterDispose_Throws()
     {
         using var stream = new MemoryStream();
         using var writer = new OpenXmlPackageWriter(stream);
         var entry = writer.CreatePart(new("/foo.xml", UriKind.Relative), "text/xml");
         entry.Dispose();
-        Assert.Throws<ObjectDisposedException>(() =>
-            entry.AddRelationship(new("bar.xml", UriKind.Relative), "type"));
+        await Assert.That(() =>
+            entry.AddRelationship(new("bar.xml", UriKind.Relative), "type")).ThrowsExactly<ObjectDisposedException>();
     }
 
     [Test]
@@ -422,21 +421,21 @@ public class OpenXmlPackageWriterTests
     }
 
     [Test]
-    public void PartRelationship_Properties()
+    public async Task PartRelationship_Properties()
     {
         var uri = new Uri("foo.xml", UriKind.Relative);
         var rel = new PartRelationship(uri, "type", "rId1", TargetMode.External);
-        Assert.That(rel.TargetUri, Is.EqualTo(uri));
-        Assert.That(rel.RelationshipType, Is.EqualTo("type"));
-        Assert.That(rel.TargetMode, Is.EqualTo(TargetMode.External));
-        Assert.That(rel.Id, Is.EqualTo("rId1"));
+        await Assert.That(rel.TargetUri).IsEqualTo(uri);
+        await Assert.That(rel.RelationshipType).IsEqualTo("type");
+        await Assert.That(rel.TargetMode).IsEqualTo(TargetMode.External);
+        await Assert.That(rel.Id).IsEqualTo("rId1");
     }
 
     [Test]
-    public void PartRelationship_DefaultTargetMode()
+    public async Task PartRelationship_DefaultTargetMode()
     {
         var rel = new PartRelationship(new("foo.xml", UriKind.Relative), "type", "rId1");
-        Assert.That(rel.TargetMode, Is.EqualTo(TargetMode.Internal));
+        await Assert.That(rel.TargetMode).IsEqualTo(TargetMode.Internal);
     }
 
     [Test]
@@ -462,20 +461,19 @@ public class OpenXmlPackageWriterTests
         // central directory) via WriteAsync — that's the whole point of the
         // async surface. ZipArchive may also trigger some intermediate sync
         // flushes via Flush() calls, so we don't assert SyncWriteCalls == 0.
-        Assert.Multiple(() =>
+        using (Assert.Multiple())
         {
-            Assert.That(tracker.AsyncWriteCalls, Is.GreaterThanOrEqualTo(1),
-                "DisposeAsync should flush via WriteAsync at least once");
-            Assert.That(tracker.TotalBytesWritten, Is.GreaterThan(0));
-        });
+            await Assert.That(tracker.AsyncWriteCalls).IsGreaterThanOrEqualTo(1).Because("DisposeAsync should flush via WriteAsync at least once");
+            await Assert.That(tracker.TotalBytesWritten).IsGreaterThan(0);
+        }
 
         stream.Position = 0;
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Async!"));
+        await Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText).IsEqualTo("Async!");
     }
 
     [Test]
-    public void Dispose_FlushesFinalBufferSynchronously()
+    public async Task Dispose_FlushesFinalBufferSynchronously()
     {
         using var stream = new MemoryStream();
         var tracker = new SyncAsyncTrackingStream(stream);
@@ -494,13 +492,11 @@ public class OpenXmlPackageWriterTests
         }
 
         // Sync disposal routes the final flush through sync Write.
-        Assert.Multiple(() =>
+        using (Assert.Multiple())
         {
-            Assert.That(tracker.SyncWriteCalls, Is.GreaterThanOrEqualTo(1),
-                "Sync Dispose should flush via Write");
-            Assert.That(tracker.AsyncWriteCalls, Is.Zero,
-                "Sync Dispose should not touch the async path");
-        });
+            await Assert.That(tracker.SyncWriteCalls).IsGreaterThanOrEqualTo(1).Because("Sync Dispose should flush via Write");
+            await Assert.That(tracker.AsyncWriteCalls).IsZero().Because("Sync Dispose should not touch the async path");
+        }
     }
 
     [Test]
@@ -524,8 +520,7 @@ public class OpenXmlPackageWriterTests
         // With no buffer, ZipArchive's writes land on the target immediately
         // during WritePart — they're not deferred to DisposeAsync. This is
         // the distinguishing property of bufferSize: 0.
-        Assert.That(tracker.TotalBytesWritten, Is.GreaterThan(0),
-            "Writes should reach the target during WritePart, not deferred");
+        await Assert.That(tracker.TotalBytesWritten).IsGreaterThan(0).Because("Writes should reach the target during WritePart, not deferred");
     }
 
     [Test]
@@ -548,7 +543,7 @@ public class OpenXmlPackageWriterTests
 
         stream.Position = 0;
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Unbuffered!"));
+        await Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText).IsEqualTo("Unbuffered!");
     }
 
     [Test]
@@ -573,17 +568,15 @@ public class OpenXmlPackageWriterTests
                 new Document(new Body(new Paragraph(new Run(new Text("Spilled!"))))));
         }
 
-        Assert.Multiple(() =>
+        using (Assert.Multiple())
         {
-            Assert.That(tracker.SyncWriteCalls, Is.GreaterThan(0),
-                "Small buffer should spill sync while writing");
-            Assert.That(tracker.AsyncWriteCalls, Is.GreaterThanOrEqualTo(1),
-                "Final flush during DisposeAsync should still be async");
-        });
+            await Assert.That(tracker.SyncWriteCalls).IsGreaterThan(0).Because("Small buffer should spill sync while writing");
+            await Assert.That(tracker.AsyncWriteCalls).IsGreaterThanOrEqualTo(1).Because("Final flush during DisposeAsync should still be async");
+        }
 
         stream.Position = 0;
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Spilled!"));
+        await Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText).IsEqualTo("Spilled!");
     }
 
     [Test]
@@ -607,8 +600,7 @@ public class OpenXmlPackageWriterTests
         await writer.FlushAsync();
         var asyncAfter = tracker.AsyncWriteCalls;
 
-        Assert.That(asyncAfter, Is.GreaterThan(asyncBefore),
-            "FlushAsync should push at least one async write to the target");
+        await Assert.That(asyncAfter).IsGreaterThan(asyncBefore).Because("FlushAsync should push at least one async write to the target");
     }
 
     [Test]
@@ -625,11 +617,11 @@ public class OpenXmlPackageWriterTests
 
         await writer.FlushAsync();
 
-        Assert.Multiple(() =>
+        using (Assert.Multiple())
         {
-            Assert.That(tracker.SyncWriteCalls, Is.EqualTo(beforeSync));
-            Assert.That(tracker.AsyncWriteCalls, Is.EqualTo(beforeAsync));
-        });
+            await Assert.That(tracker.SyncWriteCalls).IsEqualTo(beforeSync);
+            await Assert.That(tracker.AsyncWriteCalls).IsEqualTo(beforeAsync);
+        }
     }
 
     [Test]
@@ -652,8 +644,7 @@ public class OpenXmlPackageWriterTests
         var beforeAsync = tracker.AsyncWriteCalls;
         await writer.FlushAsync();
 
-        Assert.That(tracker.AsyncWriteCalls, Is.EqualTo(beforeAsync),
-            "FlushAsync with bufferSize: 0 must be a no-op — nothing to flush");
+        await Assert.That(tracker.AsyncWriteCalls).IsEqualTo(beforeAsync).Because("FlushAsync with bufferSize: 0 must be a no-op — nothing to flush");
     }
 
     [Test]
@@ -689,8 +680,8 @@ public class OpenXmlPackageWriterTests
 
         stream.Position = 0;
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Is.EqualTo("Flushed between!"));
-        Assert.That(doc.MainDocumentPart.GetPartsOfType<StyleDefinitionsPart>(), Is.Not.Empty);
+        await Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText).IsEqualTo("Flushed between!");
+        await Assert.That(doc.MainDocumentPart.GetPartsOfType<StyleDefinitionsPart>()).IsNotEmpty();
     }
 
     [Test]
@@ -713,7 +704,7 @@ public class OpenXmlPackageWriterTests
         }
 
         // Must still be writable after async dispose.
-        Assert.DoesNotThrow(() => stream.WriteByte(0));
+        await Assert.That(() => stream.WriteByte(0)).ThrowsNothing();
     }
 
     [Test]
@@ -737,7 +728,7 @@ public class OpenXmlPackageWriterTests
         stream.Position = 0;
 
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart, Is.Not.Null);
+        await Assert.That(doc.MainDocumentPart).IsNotNull();
 
         stream.Position = 0;
 

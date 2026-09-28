@@ -1,5 +1,4 @@
-[TestFixture]
-public class BufferedWriteStreamTests
+﻿public class BufferedWriteStreamTests
 {
     [Test]
     public async Task WriteAsync_SpillsViaTargetWriteAsync_NotSyncWrite()
@@ -14,13 +13,11 @@ public class BufferedWriteStreamTests
 
         await buffered.WriteAsync(new byte[48]);
 
-        Assert.Multiple(() =>
+        using (Assert.Multiple())
         {
-            Assert.That(tracker.AsyncWriteCalls, Is.GreaterThanOrEqualTo(2),
-                "Spills inside WriteAsync should use target.WriteAsync, not sync Write");
-            Assert.That(tracker.SyncWriteCalls, Is.Zero,
-                "WriteAsync must not fall back to target.Write");
-        });
+            await Assert.That(tracker.AsyncWriteCalls).IsGreaterThanOrEqualTo(2).Because("Spills inside WriteAsync should use target.WriteAsync, not sync Write");
+            await Assert.That(tracker.SyncWriteCalls).IsZero().Because("WriteAsync must not fall back to target.Write");
+        }
     }
 
     [Test]
@@ -32,17 +29,15 @@ public class BufferedWriteStreamTests
         await using (var buffered = new BufferedWriteStream(tracker, bufferSize: 1024, leaveOpen: true))
         {
             await buffered.WriteAsync(new byte[100]);
-            Assert.That(tracker.TotalBytesWritten, Is.Zero,
-                "Small async writes that fit should accumulate, not reach the target");
+            await Assert.That(tracker.TotalBytesWritten).IsZero().Because("Small async writes that fit should accumulate, not reach the target");
         }
 
-        Assert.That(tracker.TotalBytesWritten, Is.EqualTo(100),
-            "DisposeAsync should flush the accumulated bytes");
-        Assert.That(tracker.AsyncWriteCalls, Is.GreaterThanOrEqualTo(1));
+        await Assert.That(tracker.TotalBytesWritten).IsEqualTo(100).Because("DisposeAsync should flush the accumulated bytes");
+        await Assert.That(tracker.AsyncWriteCalls).IsGreaterThanOrEqualTo(1);
     }
 
     [Test]
-    public void Write_SyncSpillsViaTargetWrite()
+    public async Task Write_SyncSpillsViaTargetWrite()
     {
         using var stream = new MemoryStream();
         var tracker = new SyncAsyncTrackingStream(stream);
@@ -51,16 +46,15 @@ public class BufferedWriteStreamTests
         buffered.Write(new byte[48], 0, 48);
         buffered.Flush();
 
-        Assert.Multiple(() =>
+        using (Assert.Multiple())
         {
-            Assert.That(tracker.SyncWriteCalls, Is.GreaterThan(0),
-                "Sync Write should spill via target.Write");
-            Assert.That(tracker.AsyncWriteCalls, Is.Zero);
-        });
+            await Assert.That(tracker.SyncWriteCalls).IsGreaterThan(0).Because("Sync Write should spill via target.Write");
+            await Assert.That(tracker.AsyncWriteCalls).IsZero();
+        }
     }
 
     [Test]
-    public void Dispose_LeaveOpen_DoesNotDisposeTarget()
+    public async Task Dispose_LeaveOpen_DoesNotDisposeTarget()
     {
         using var stream = new MemoryStream();
         var tracker = new SyncAsyncTrackingStream(stream);
@@ -70,7 +64,7 @@ public class BufferedWriteStreamTests
             buffered.Write([1, 2, 3], 0, 3);
         }
 
-        Assert.DoesNotThrow(() => stream.WriteByte(0));
+        await Assert.That(() => stream.WriteByte(0)).ThrowsNothing();
     }
 
     [Test]
@@ -84,6 +78,6 @@ public class BufferedWriteStreamTests
             await buffered.WriteAsync(new byte[] { 1, 2, 3 });
         }
 
-        Assert.DoesNotThrow(() => stream.WriteByte(0));
+        await Assert.That(() => stream.WriteByte(0)).ThrowsNothing();
     }
 }

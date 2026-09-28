@@ -1,4 +1,4 @@
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
 
 public class WordBuilderTests
 {
@@ -62,9 +62,9 @@ public class WordBuilderTests
 
         stream.Position = 0;
         using var doc = WordprocessingDocument.Open(stream, false);
-        Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText, Does.Contain("Quarterly Report"));
-        Assert.That(doc.MainDocumentPart.FooterParts.Count(), Is.EqualTo(1));
-        Assert.That(doc.MainDocumentPart.StyleDefinitionsPart, Is.Not.Null);
+        await Assert.That(doc.MainDocumentPart!.Document!.Body!.InnerText).Contains("Quarterly Report");
+        await Assert.That(doc.MainDocumentPart.FooterParts.Count()).IsEqualTo(1);
+        await Assert.That(doc.MainDocumentPart.StyleDefinitionsPart).IsNotNull();
 
         stream.Position = 0;
         await Verify(stream, extension: "docx")
@@ -79,24 +79,24 @@ public class WordBuilderTests
     }
 
     [Test]
-    public void AddStylesAfterDocument_Throws()
+    public async Task AddStylesAfterDocument_Throws()
     {
         using var stream = new MemoryStream();
         using var word = new StreamingWordDocumentBuilder(stream, leaveOpen: true);
         word.WriteDocument(new(new Body()));
 
-        Assert.Throws<InvalidOperationException>(() =>
-            word.AddStyles(new()));
+        await Assert.That(() =>
+            word.AddStyles(new())).ThrowsExactly<InvalidOperationException>();
     }
 
     [Test]
-    public void DoubleStyles_Throws()
+    public async Task DoubleStyles_Throws()
     {
         using var stream = new MemoryStream();
         using var word = new StreamingWordDocumentBuilder(stream, leaveOpen: true);
         word.AddStyles(new());
 
-        Assert.Throws<InvalidOperationException>(() =>
-            word.AddStyles(new()));
+        await Assert.That(() =>
+            word.AddStyles(new())).ThrowsExactly<InvalidOperationException>();
     }
 }

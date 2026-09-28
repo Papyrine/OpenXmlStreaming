@@ -1,4 +1,4 @@
-using DocumentFormat.OpenXml.Spreadsheet;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
 
 public class WorkbookBuilderTests
 {
@@ -41,25 +41,25 @@ public class WorkbookBuilderTests
         using var doc = SpreadsheetDocument.Open(stream, false);
         var sheets = doc.WorkbookPart!.Workbook!.Sheets!.Elements<Sheet>().ToList();
 
-        Assert.Multiple(() =>
+        using (Assert.Multiple())
         {
-            Assert.That(sheets, Has.Count.EqualTo(2));
-            Assert.That(sheets[0].Name!.Value, Is.EqualTo("Revenue"));
-            Assert.That(sheets[1].Name!.Value, Is.EqualTo("Expenses"));
-        });
+            await Assert.That(sheets).Count().IsEqualTo(2);
+            await Assert.That(sheets[0].Name!.Value).IsEqualTo("Revenue");
+            await Assert.That(sheets[1].Name!.Value).IsEqualTo("Expenses");
+        }
 
         stream.Position = 0;
         await Verify(stream, extension: "xlsx");
     }
 
     [Test]
-    public void AddAfterDispose_Throws()
+    public async Task AddAfterDispose_Throws()
     {
         using var stream = new MemoryStream();
         var workbook = new StreamingWorkbookBuilder(stream, leaveOpen: true);
         workbook.Dispose();
 
-        Assert.Throws<InvalidOperationException>(() =>
-            workbook.AddWorksheet("Late", new(new SheetData())));
+        await Assert.That(() =>
+            workbook.AddWorksheet("Late", new(new SheetData()))).ThrowsExactly<InvalidOperationException>();
     }
 }

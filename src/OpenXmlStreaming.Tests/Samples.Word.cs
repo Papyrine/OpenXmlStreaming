@@ -1,6 +1,5 @@
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
 
-[TestFixture]
 public partial class Samples
 {
     [Test]

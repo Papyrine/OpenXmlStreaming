@@ -2,6 +2,5 @@
 global using System.IO.Packaging;
 global using DocumentFormat.OpenXml;
 global using DocumentFormat.OpenXml.Packaging;
-global using NUnit.Framework;
 global using OpenXmlStreaming;
 global using VerifyTests.DiffPlex;
