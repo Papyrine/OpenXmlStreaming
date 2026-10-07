@@ -11,13 +11,13 @@
     <SponsorExemption Include="MaintainerConsulting" Message="Organizations that have engaged any of the core maintainers of Papyrine in consulting work could be exempt from the Maintenance Fee for 6 months from the final date of that work." MaxTermMonths="6" />
     <SponsorExemption Include="SmallRevenue" Message="Consumers under US$10,000 annual gross revenue are exempt." MaxTermMonths="12" />
     <SponsorExemption Include="OpenSource" Message="Open source projects that do not generate revenue are exempt. Voluntary donations and sponsorships are not revenue." MaxTermMonths="12" />
-    <PackageVersion Include="Morph.Skia" Version="1.20.0" />
+    <PackageVersion Include="Morph.Skia" Version="1.21.0" />
     <PackageVersion Include="TUnit" Version="1.72.16" />
-    <PackageVersion Include="ProjectDefaults" Version="1.0.182" />
-    <PackageVersion Include="Verify" Version="33.3.0" />
-    <PackageVersion Include="Verify.TUnit" Version="33.3.0" />
+    <PackageVersion Include="ProjectDefaults" Version="1.0.184" />
+    <PackageVersion Include="Verify" Version="33.3.2-beta.1" />
+    <PackageVersion Include="Verify.TUnit" Version="33.3.2-beta.1" />
     <PackageVersion Include="Verify.OpenXML" Version="2.0.0" />
-    <PackageVersion Include="Argon" Version="0.37.0" />
+    <PackageVersion Include="Argon" Version="0.38.0" />
     <PackageVersion Include="DiffEngine" Version="20.7.0" />
     <PackageVersion Include="EmptyFiles" Version="8.20.0" />
     <PackageVersion Include="SimpleInfoName" Version="3.2.0" />
